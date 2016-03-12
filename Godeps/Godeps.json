@@ -1,0 +1,48 @@
+{
+	"ImportPath": "github.com/kopwei/knitmesh",
+	"GoVersion": "go1.6",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "code.google.com/p/gorilla/context",
+			"Comment": "go1-0",
+			"Rev": "'75a547f433ad6a0e8e4c1d6c1e287c18737dbf72'"
+		},
+		{
+			"ImportPath": "code.google.com/p/gorilla/mux",
+			"Comment": "go1-0",
+			"Rev": "'75a547f433ad6a0e8e4c1d6c1e287c18737dbf72'"
+		},
+		{
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v0.9.0-17-ga26f435",
+			"Rev": "a26f43589d737684363ff856c5a0f9f24b946510"
+		},
+		{
+			"ImportPath": "github.com/docker/libnetwork/discoverapi",
+			"Comment": "v0.7.0-dev.7",
+			"Rev": "9209061613e9fb239b8d7738bf7eaa79ba356aed"
+		},
+		{
+			"ImportPath": "github.com/docker/libnetwork/driverapi",
+			"Comment": "v0.7.0-dev.7",
+			"Rev": "9209061613e9fb239b8d7738bf7eaa79ba356aed"
+		},
+		{
+			"ImportPath": "github.com/docker/libnetwork/drivers/remote/api",
+			"Comment": "v0.7.0-dev.7",
+			"Rev": "9209061613e9fb239b8d7738bf7eaa79ba356aed"
+		},
+		{
+			"ImportPath": "github.com/docker/libnetwork/types",
+			"Comment": "v0.7.0-dev.7",
+			"Rev": "9209061613e9fb239b8d7738bf7eaa79ba356aed"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "eb2c74142fd19a79b3f237334c7384d5167b1b46"
+		}
+	]
+}
