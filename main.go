@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 
 	"github.com/kopwei/knitmesh/common"
@@ -25,13 +26,13 @@ func main() {
 
 	flag.BoolVar(&justVersion, "version", false, "print version and exit")
 	flag.StringVar(&logLevel, "log-level", "info", "logging level (debug, info, warning, error)")
-	flag.StringVar(&address, "socket", "/run/docker/plugins/weave.sock", "socket on which to listen")
+	flag.StringVar(&address, "socket", "/run/docker/plugins/knitmesh.sock", "socket on which to listen")
 	flag.StringVar(&nameserver, "nameserver", "", "nameserver to provide to containers")
 
 	flag.Parse()
 
 	if justVersion {
-		fmt.Printf("weave plugin %s\n", version)
+		fmt.Printf("knitmesh plugin %s\n", version)
 		os.Exit(0)
 	}
 
@@ -51,6 +52,14 @@ func main() {
 	if err := os.Remove(address); err != nil && !os.IsNotExist(err) {
 		common.Log.Fatal(err)
 	}
+	dir := filepath.Dir(address)
+	if _, err := os.Stat(dir); err != nil {
+		err = os.MkdirAll(dir, os.ModeDir)
+		if err != nil {
+			common.Log.Fatal(err)
+		}
+	}
+
 	netlistener, err = net.Listen("unix", address)
 	if err != nil {
 		common.Log.Fatal(err)
