@@ -6,7 +6,7 @@ import (
 	"net"
 	"net/http"
 
-	"code.google.com/p/gorilla/mux"
+	"github.com/gorilla/mux"
 	"github.com/docker/libnetwork/drivers/remote/api"
 )
 
