@@ -60,18 +60,18 @@ func main() {
 		}
 	}
 
-	netlistener, err = net.Listen("unix", address)
+	//netlistener, err = net.Listen("unix", address)
 	if err != nil {
 		common.Log.Fatal(err)
 	}
-	defer netlistener.Close()
+	//defer netlistener.Close()
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, os.Kill, syscall.SIGTERM)
 
 	endChan := make(chan error, 1)
 	go func() {
-		endChan <- listener.Listen(netlistener, d)
+		endChan <- listener.Listen(d)
 	}()
 
 	select {

@@ -1,27 +1,19 @@
 package listener
 
-import (
-	"encoding/json"
-	"fmt"
-	"net"
-	"net/http"
-
-	"github.com/gorilla/mux"
-	"github.com/docker/libnetwork/drivers/remote/api"
-)
+import "github.com/docker/go-plugins-helpers/network"
 
 // Driver is the interface towards docker
 type Driver interface {
-	GetCapabilities() (*api.GetCapabilityResponse, error)
-	CreateNetwork(create *api.CreateNetworkRequest) error
-	DeleteNetwork(delete *api.DeleteNetworkRequest) error
-	CreateEndpoint(create *api.CreateEndpointRequest) (*api.CreateEndpointResponse, error)
-	DeleteEndpoint(delete *api.DeleteEndpointRequest) error
-	EndpointInfo(req *api.EndpointInfoRequest) (*api.EndpointInfoResponse, error)
-	JoinEndpoint(j *api.JoinRequest) (response *api.JoinResponse, error error)
-	LeaveEndpoint(leave *api.LeaveRequest) error
-	DiscoverNew(discover *api.DiscoveryNotification) error
-	DiscoverDelete(delete *api.DiscoveryNotification) error
+	GetCapabilities() (*network.CapabilitiesResponse, error)
+	CreateNetwork(*network.CreateNetworkRequest) error
+	DeleteNetwork(*network.DeleteNetworkRequest) error
+	CreateEndpoint(*network.CreateEndpointRequest) (*network.CreateEndpointResponse, error)
+	DeleteEndpoint(*network.DeleteEndpointRequest) error
+	EndpointInfo(*network.InfoRequest) (*network.InfoResponse, error)
+	Join(*network.JoinRequest) (*network.JoinResponse, error)
+	Leave(*network.LeaveRequest) error
+	DiscoverNew(*network.DiscoveryNotification) error
+	DiscoverDelete(*network.DiscoveryNotification) error
 }
 
 type listener struct {
@@ -29,30 +21,37 @@ type listener struct {
 }
 
 // Listen is the function start listening
-func Listen(socket net.Listener, driver Driver) error {
-	router := mux.NewRouter()
-	router.NotFoundHandler = http.HandlerFunc(notFound)
+func Listen(driver Driver) error {
+	h := network.NewHandler(driver)
 
-	router.Methods("POST").Path("/Plugin.Activate").HandlerFunc(handshake)
+	return h.ServeUnix("root", "knitmesh")
 
-	handleMethod := func(method string, h http.HandlerFunc) {
-		router.Methods("POST").Path(fmt.Sprintf("/%s.%s", "NetworkDriver", method)).HandlerFunc(h)
-	}
+	/*
+		router := mux.NewRouter()
+		router.NotFoundHandler = http.HandlerFunc(notFound)
 
-	listener := &listener{driver}
+		router.Methods("POST").Path("/Plugin.Activate").HandlerFunc(handshake)
 
-	handleMethod("GetCapabilities", listener.getCapabilities)
-	handleMethod("CreateNetwork", listener.createNetwork)
-	handleMethod("DeleteNetwork", listener.deleteNetwork)
-	handleMethod("CreateEndpoint", listener.createEndpoint)
-	handleMethod("DeleteEndpoint", listener.deleteEndpoint)
-	handleMethod("EndpointOperInfo", listener.infoEndpoint)
-	handleMethod("Join", listener.joinEndpoint)
-	handleMethod("Leave", listener.leaveEndpoint)
+		handleMethod := func(method string, h http.HandlerFunc) {
+			router.Methods("POST").Path(fmt.Sprintf("/%s.%s", "NetworkDriver", method)).HandlerFunc(h)
+		}
 
-	return http.Serve(socket, router)
+		listener := &listener{driver}
+
+		handleMethod("GetCapabilities", listener.getCapabilities)
+		handleMethod("CreateNetwork", listener.createNetwork)
+		handleMethod("DeleteNetwork", listener.deleteNetwork)
+		handleMethod("CreateEndpoint", listener.createEndpoint)
+		handleMethod("DeleteEndpoint", listener.deleteEndpoint)
+		handleMethod("EndpointOperInfo", listener.infoEndpoint)
+		handleMethod("Join", listener.joinEndpoint)
+		handleMethod("Leave", listener.leaveEndpoint)
+
+		return http.Serve(socket, router)
+	*/
 }
 
+/*
 func (listener *listener) getCapabilities(w http.ResponseWriter, r *http.Request) {
 	caps, err := listener.d.GetCapabilities()
 	objectOrErrorResponse(w, caps, err)
@@ -199,3 +198,5 @@ func emptyOrErrorResponse(w http.ResponseWriter, err error) {
 	}
 	emptyResponse(w)
 }
+
+*/

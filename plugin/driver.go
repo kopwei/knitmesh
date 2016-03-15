@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	sdk "github.com/docker/go-plugins-helpers/network"
-	"github.com/docker/libnetwork/drivers/remote/api"
+	"github.com/docker/go-plugins-helpers/network"
 	"github.com/kopwei/knitmesh/common"
 	"github.com/kopwei/knitmesh/plugin/listener"
 )
@@ -17,8 +16,8 @@ type driver struct {
 	endpoints map[string]struct{}
 }
 
-var caps = &api.GetCapabilityResponse{
-	Scope: sdk.LocalScope,
+var caps = &network.CapabilitiesResponse{
+	Scope: network.LocalScope,
 }
 
 // New ist used to intialize the plugin object
@@ -47,29 +46,29 @@ func errorf(format string, a ...interface{}) error {
 	return fmt.Errorf(format, a...)
 }
 
-func (driver *driver) GetCapabilities() (*api.GetCapabilityResponse, error) {
+func (driver *driver) GetCapabilities() (*network.CapabilitiesResponse, error) {
 	common.Log.Debugf("Get capabilities: responded with %+v", caps)
 	return caps, nil
 }
 
-func (driver *driver) CreateNetwork(create *api.CreateNetworkRequest) error {
+func (driver *driver) CreateNetwork(create *network.CreateNetworkRequest) error {
 	common.Log.Debugf("Create network request %+v", create)
 	common.Log.Infof("Create network %s", create.NetworkID)
 	return nil
 }
 
-func (driver *driver) DeleteNetwork(delete *api.DeleteNetworkRequest) error {
+func (driver *driver) DeleteNetwork(delete *network.DeleteNetworkRequest) error {
 	common.Log.Debugf("Delete network request: %+v", delete)
 	common.Log.Infof("Destroy network %s", delete.NetworkID)
 	return nil
 }
 
-func (driver *driver) CreateEndpoint(create *api.CreateEndpointRequest) (*api.CreateEndpointResponse, error) {
+func (driver *driver) CreateEndpoint(create *network.CreateEndpointRequest) (*network.CreateEndpointResponse, error) {
 	common.Log.Debugf("Create endpoint request %+v", create)
 	return nil, nil
 }
 
-func (driver *driver) DeleteEndpoint(deleteReq *api.DeleteEndpointRequest) error {
+func (driver *driver) DeleteEndpoint(deleteReq *network.DeleteEndpointRequest) error {
 	common.Log.Debugf("Delete endpoint request: %+v", deleteReq)
 	common.Log.Infof("Delete endpoint %s", deleteReq.EndpointID)
 	return nil
@@ -79,28 +78,28 @@ func (driver *driver) HasEndpoint(endpointID string) bool {
 	return false
 }
 
-func (driver *driver) EndpointInfo(req *api.EndpointInfoRequest) (*api.EndpointInfoResponse, error) {
+func (driver *driver) EndpointInfo(req *network.InfoRequest) (*network.InfoResponse, error) {
 	common.Log.Debugf("Endpoint info request: %+v", req)
 	common.Log.Infof("Endpoint info %s", req.EndpointID)
 	return nil, nil
 }
 
-func (driver *driver) JoinEndpoint(j *api.JoinRequest) (*api.JoinResponse, error) {
+func (driver *driver) Join(j *network.JoinRequest) (*network.JoinResponse, error) {
 
 	return nil, nil
 }
 
-func (driver *driver) LeaveEndpoint(leave *api.LeaveRequest) error {
+func (driver *driver) Leave(leave *network.LeaveRequest) error {
 	common.Log.Debugf("Leave request: %+v", leave)
 	return nil
 }
 
-func (driver *driver) DiscoverNew(disco *api.DiscoveryNotification) error {
+func (driver *driver) DiscoverNew(disco *network.DiscoveryNotification) error {
 	common.Log.Debugf("Dicovery new notification: %+v", disco)
 	return nil
 }
 
-func (driver *driver) DiscoverDelete(disco *api.DiscoveryNotification) error {
+func (driver *driver) DiscoverDelete(disco *network.DiscoveryNotification) error {
 	common.Log.Debugf("Dicovery delete notification: %+v", disco)
 	return nil
 }
