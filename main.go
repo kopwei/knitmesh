@@ -25,7 +25,7 @@ func main() {
 	)
 
 	flag.BoolVar(&justVersion, "version", false, "print version and exit")
-	flag.StringVar(&logLevel, "log-level", "info", "logging level (debug, info, warning, error)")
+	flag.StringVar(&logLevel, "log-level", "debug", "logging level (debug, info, warning, error)")
 	flag.StringVar(&address, "socket", "/run/docker/plugins/knitmesh.sock", "socket on which to listen")
 	flag.StringVar(&nameserver, "nameserver", "", "nameserver to provide to containers")
 

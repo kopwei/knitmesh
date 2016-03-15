@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sync"
 
+	sdk "github.com/docker/go-plugins-helpers/network"
 	"github.com/docker/libnetwork/drivers/remote/api"
 	"github.com/kopwei/knitmesh/common"
 	"github.com/kopwei/knitmesh/plugin/listener"
@@ -17,7 +18,7 @@ type driver struct {
 }
 
 var caps = &api.GetCapabilityResponse{
-	Scope: "global",
+	Scope: sdk.LocalScope,
 }
 
 // New ist used to intialize the plugin object
