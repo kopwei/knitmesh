@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/docker/go-plugins-helpers/network"
+	"github.com/docker/libnetwork/netutils"
 	"github.com/kopwei/goovs"
 	"github.com/kopwei/knitmesh/common"
 	"github.com/kopwei/knitmesh/plugin/listener"
@@ -120,6 +121,17 @@ func (driver *driver) DeleteNetwork(deletereq *network.DeleteNetworkRequest) err
 
 func (driver *driver) CreateEndpoint(create *network.CreateEndpointRequest) (*network.CreateEndpointResponse, error) {
 	common.Log.Debugf("Create endpoint request %+v", create)
+	hostIfName, err := netutils.GenerateIfaceName("veth", 7)
+	if err != nil {
+		return nil, err
+	}
+
+	// Generate a name for what will be the sandbox side pipe interface
+	containerIfName, err := netutils.GenerateIfaceName("veth", 7)
+	if err != nil {
+		return nil, err
+	}
+
 	return nil, nil
 }
 
